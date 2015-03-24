@@ -6,9 +6,9 @@
 #
 
 # setting variables
-dir = ~/.dotfiles                                   # dotfiles dirctory
-olddir = ~/.dotfiles-old                            # old dotfiles backup directory
-files = "bashrc vimrc Renviron"     # list of files/folders to symlink in homedir
+dir=~/.dotfiles                         # dotfiles dirctory
+olddir=~/.dotfiles-old                  # old dotfiles backup directory
+files="bashrc vimrc gitconfig Renviron" # list of files/folders to symlink in homedir
 
 # create dotfiles-old in homedir
 echo "Creating $olddir for backup of any existing dotfiles in ~"
@@ -21,5 +21,5 @@ for file in $files; do
     echo "Moving any existing dotfiles from ~ to $olddir"
     mv ~/.$file ~/.dotfiles-old/
     echo "Creating symlink to $file in home directory."
-    ln -s $dir/$file ~/.$file
+    ln -s $dir/.$file ~/.$file
 done
