@@ -6,7 +6,7 @@
 "       marin.grgurev@gmail.com
 "
 " Version:
-"       1.4 - March 31, 2015
+"       1.5 - April 26, 2015
 "
 " Sections:
 "           General settings
