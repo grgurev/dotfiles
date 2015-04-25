@@ -31,8 +31,8 @@ let maplocalleader="\<Space>\<Space>"
 autocmd! BufWritePost .vimrc source %
 
 " history and undolevels - you never know when you're gonna need it
-set history=70
-set undolevels=700
+set history=1000
+set undolevels=1000
 
 " disable backup and swap files
 set nobackup
@@ -122,25 +122,24 @@ set showmatch       " set show matching parenthesis
 set ignorecase      " ignore case when searching
 set smartcase       " ignore case if search pattern is all lowercase, case-sensitive otherwise
 set smarttab        " insert tabs on the start of a line according to shiftwidth, not tabstop
-"set virtualedit=all " allow the cursor to go in to "invalid" places
+"set virtualedit=all " allow the cursor to go in to 'invalid' places
 set hlsearch        " highlight search terms
 set incsearch       " show search matches as you type
-set gdefault        " search/replace "globally" (on a line) by default
+set gdefault        " search/replace 'globally' (on a line) by default
 
 " editor layout
 set termencoding=utf-8
 set encoding=utf-8
-set lazyredraw                  " don't update the display while executing macros
-"set laststatus=2                " tell VIM to always put a status line in, even if there is only one window
+set lazyredraw      " don't update the display while executing macros
+"set laststatus=2   " tell VIM to always put a status line in, even if there is only one window
 
 " folding
 set foldmethod=indent   " enables folding and setting method to indent
-set foldlevel=99        " enables that all folds are opent when starting vim
+set foldlevel=99    " enables that all folds are opent when starting vim
 
 " show invisible characters.
 set listchars=tab:▸\ ,trail:·
 set list
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
