@@ -6,7 +6,7 @@
 "       marin.grgurev@gmail.com
 "
 " Version:
-"       1.5 - April 26, 2015
+"       1.6 - May 2, 2015
 "
 " Sections:
 "           General settings
@@ -54,18 +54,19 @@ filetype indent on
 
 " turn on omni completion
 set omnifunc=syntaxcomplete#Complete
+set completeopt=menuone,longest,preview
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Colors and fonts
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-colorscheme default     " set colorscheme
+colorscheme Tomorrow     " set colorscheme
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " edit and source .vimrc file
-nnoremap <leader>oe :e $MYVIMRC<CR>
-nnoremap <leader>pv :source $MYVIMRC<CR>
+nnoremap <leader>ve :e $MYVIMRC<CR>
+nnoremap <leader>vs :source $MYVIMRC<CR>
 
 " easier moving of code blocks
 vnoremap <silent>< <gv
@@ -88,6 +89,9 @@ noremap <C-l> <C-w>l
 noremap <C-h> <C-w>h
 nnoremap <leader>v <C-w>v<C-w>l
 
+" change directory to the file being edited
+nnoremap <leader>w :cd %:p:h<CR>:pwd<CR>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Console UI and editing behaviour
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -100,9 +104,10 @@ set nuw=4           " setting the size of the character for row numbering
 set ruler           " set the current position at the bottom of the screen
 set scrolloff=5     " keep at least 5 lines above/below
 set sidescrolloff=5 " keep at least 5 lines left/right
-set shortmess=I     " don't show intro
+set shortmess=atI     " don't show intro
 set vb t_vb=        " remove sounds and flashing on erors
 set guioptions-=T   " remove top toolbar
+set guioptions-=m  "remove menu bar
 set guifont=Monospace\ 9  " set default font
 set backspace=indent,eol,start  " allow the backspace key to erase previously entered characters, autoindent, and newline
 set tw=80           " set width of document (used by gd)
@@ -131,7 +136,7 @@ set gdefault        " search/replace 'globally' (on a line) by default
 set termencoding=utf-8
 set encoding=utf-8
 set lazyredraw      " don't update the display while executing macros
-"set laststatus=2   " tell VIM to always put a status line in, even if there is only one window
+set laststatus=2   " tell VIM to always put a status line in, even if there is only one window
 
 " folding
 set foldmethod=indent   " enables folding and setting method to indent
@@ -154,12 +159,13 @@ Plug 'Shougo/unite.vim'     " Unite plugin
 Plug 'Shougo/neomru.vim'    " mru plugin for Unit
 Plug 'Shougo/vimfiler.vim'  " Powerful file explorer implemented by Vim script
 Plug 'nvie/vim-flake8'      " a static syntax and style checker for Python source code
-"Plug 'davidhalter/jedi-vim' " Python autocompletion with VIM
+Plug 'davidhalter/jedi-vim' " Python autocompletion with VIM
 Plug 'ntpeters/vim-better-whitespace'  " Better whitespace highlighting for Vim 
 Plug 'tpope/vim-fugitive'   " a Git wrapper so awesome, it should be illegal
-"Plug 'Shougo/neocomplete'   " Next generation completion framework after neocomplcache
 "Plug 'jcfaria/Vim-R-plugin' " Plugin to work with R
-Plug 'Valloric/YouCompleteMe'  " A code-completion engine for Vim
+Plug 'Shougo/neocomplete.vim'   " next generation completion framework
+Plug 'Shougo/context_filetype.vim'  " context filetype library for Vim script
+Plug 'ivanov/vim-ipython'   " a two-way integration between Vim and Python
 
 call plug#end()
 
@@ -172,23 +178,64 @@ let g:easy_align_delimiters = { ';': { 'pattern': ';', 'left_margin': 0, 'right_
 "----------------------------------------------------------
 " unite
 "----------------------------------------------------------
-" enable search history
+" enable history yank search
 let g:unite_source_history_yank_enable = 1
 
-" settings for ag find command
-let g:unite_source_rec_async_command='ag --nocolor --hidden --nogroup -g ""'
+" use ag in unite find source
+let g:unite_source_rec_async_command = 'ag --follow --nocolor --nogroup --hidden ' .
+    \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git/'' --ignore ''.bzr'' ' .
+    \ '--ignore ''.zip'' --ignore ''.tar.gz'' --ignore ''.tar.bz2'' --ignore ''.rar'' ' .
+    \ '--ignore ''**/*.pyc'' -g ""'
+
+" ues ag in unite grep source
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts =
+    \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
+    \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' ' .
+    \ '--ignore ''.zip'' --ignore ''.tar.gz'' --ignore ''.tar.bz2'' --ignore ''.rar'' ' .
+    \ '--ignore ''**/*.pyc'' -g ""'
+let g:unite_source_grep_recursive_opt = ''
 
 " type 'find ~/ -type f | wc -l' to find the number of files to cache in home dir
-let g:unite_source_rec_max_cache_files=50000
+let g:unite_source_rec_max_cache_files = 0
 
-" custom unite functions
-call unite#custom#source('file, file/new, buffer, file_rec', 'matchers', 'matcher_fuzzy')
-call unite#custom#profile('default', 'context', {'start_insert':1, 'prompt':'>> ', 'update_time':200})
+" really improves file_rec/async search time
+let g:unite_redraw_hold_candidates = 50000
 
-" custom 'in-unite' mappings
+" fuzzy match by default
+call unite#filters#matcher_default#use(['converter_relative_word', 'matcher_fuzzy'])
+
+"let g:unite_winheight = 15
+"call unite#filters#matcher_default#use(['matcher_fuzzy'])
+"call unite#custom#source('file_rec/async', 'converters', ['converter_relative_word'])
+"call unite#custom#source('file_rec/async', 'sorters', ['sorter_selecta'])
+call unite#custom#source('file_rec/async,directory_rec/async', 'max_candidates', 19)
+
+
+" selecta sorter by default
+call unite#filters#sorter_default#use(['sorter_selecta'])
+
+" defining custom ignores
+call unite#custom_source('directory_rec/async,file_rec/async',
+    \ 'ignore_pattern', join([
+    \ '.cache/', '.git/', 'tmp/', '\.jpg$', '\.jpeg$', '\,bmp$', '\.png$', '\.gif$',
+    \ '.zip$', '\.tar\.gz$', '\.tar\.bz2$', '\.rar$', '\.tar\.xz$', '\.pyc$', '\.swp',
+    \ '.sol$'
+    \ ], '\|'))
+
+" tweaks related to unite ui
+call unite#custom#profile('default', 'context', {
+    \ 'prompt': '» ',
+    \ 'start_insert': 1,
+    \ 'update_time': 200,
+    \ 'cursor_line_highlight': 'UniteSelectedLine',
+    \ 'direction': 'botright',
+    \ 'prompt_direction': 'top',
+    \ })
+
+" custom unite mappings (insert mode)
 autocmd! FileType unite call s:UniteKeymaps()
 function! s:UniteKeymaps()
-    "let b:SuperTabDisabled=1  " Play nice with supertab
     imap <silent><buffer><C-j> <Plug>(unite_select_next_line)
     imap <silent><buffer><C-k> <Plug>(unite_select_previous_line)
     imap <silent><buffer><expr> <C-l> unite#do_action('right')
@@ -196,16 +243,15 @@ function! s:UniteKeymaps()
     nmap <silent><buffer><Esc> <Plug>(unite_all_exit)
 endfunction
 
-" unite mappings
-"nnoremap <silent><leader>w :<C-u>Unite -no-split -default-action=lcd directory_rec/async:!<CR>
-nnoremap <silent><leader>e :<C-u>Unite -no-split -default-action=lcd directory_rec/async:/home/marin<CR>
-nnoremap <silent><leader>g :<C-u>Unite -no-split file_rec/async:/home/marin/<CR>
-nnoremap <silent><leader>f :<C-u>Unite -no-split file_rec/async:!<CR>
-nnoremap <silent><leader>d :<C-u>Unite -no-split buffer<CR>
-nnoremap <silent><leader>x :<C-u>Unite -no-split line<CR>
-nnoremap <silent><leader>s :<C-u>Unite -no-split file_mru<CR>
-nnoremap <silent><leader>a :<C-u>Unite -no-split bookmark<CR>
-nnoremap <silent><leader>y :<C-u>Unite -no-split history/yank<CR>
+" custom unite mappings (normal mode)
+nnoremap <silent><leader>e :<C-u>Unite -default-action=lcd directory_rec/async:/home/marin<CR>
+nnoremap <silent><leader>g :<C-u>Unite file_rec/async:/home/marin/<CR>
+nnoremap <silent><leader>f :<C-u>Unite file_rec/async:!<CR>
+nnoremap <silent><leader>d :<C-u>Unite buffer<CR>
+nnoremap <silent><leader>x :<C-u>Unite line<CR>
+nnoremap <silent><leader>s :<C-u>Unite file_mru<CR>
+nnoremap <silent><leader>a :<C-u>Unite bookmark<CR>
+nnoremap <silent><leader>y :<C-u>Unite history/yank<CR>
 nnoremap <silent><leader>r <Plug>(unite_restart)
 
 "----------------------------------------------------------
@@ -225,11 +271,85 @@ nnoremap <leader>/ :Ag
 "----------------------------------------------------------
 " flake8
 "----------------------------------------------------------
-let g:flake8_quickfix_height=28
+let g:flake8_quickfix_height=25
 autocmd! FileType qf,vim-plug set colorcolumn=0
+autocmd BufWritePost *.py call Flake8()
 
 "----------------------------------------------------------
 " YouCompleteMe
 "----------------------------------------------------------
-let g:ycm_autoclose_preview_window_after_completion = 1
-set completeopt=longest,menuone,preview
+" auto-close the preview window after the user accepts the offered completion string
+"let g:ycm_autoclose_preview_window_after_completion = 1
+"
+"" show the completion menu even when typing inside comments
+"let g:ycm_complete_in_comments = 1
+"
+"" collect identifiers from strings and comments
+"let g:ycm_collect_identifiers_from_comments_and_strings = 1
+"
+"" completer will seed its identifier database with the keywords of the programming language used
+"let g:ycm_seed_identifiers_with_syntax = 1
+"
+"let g:ycm_prefer_semantic = 0
+"
+""nnoremap <leader>h :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"
+"" controls the character-based triggers for the various semantic completion engines
+""let g:ycm_semantic_triggers =  {'python' : ['re!\w*\s']}
+
+"----------------------------------------------------------
+" neocomplete
+"----------------------------------------------------------
+" neocomplete gets started automatically when Vim starts
+let g:neocomplete#enable_at_startup = 1
+
+" use smartcase.
+let g:neocomplete#enable_smart_case = 1
+
+" controls length of keyword becoming the targets of the completion at the minimum
+let g:neocomplete#min_keyword_length = 3
+
+" close preview window automatically
+let g:neocomplete#enable_auto_close_preview = 1
+
+" <TAB>: completion.
+"inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" For smart TAB completion.
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ neocomplete#start_manual_complete()
+function! s:check_back_space() "{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~ '\s'
+endfunction"}
+
+"----------------------------------------------------------
+" jedi-vim
+"----------------------------------------------------------
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+
+" decide the direction where the split will open
+let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#use_tabs_not_buffers = 0
+
+" default jedi-vim mappings
+let g:jedi#goto_assignments_command = "<localleader>g"
+let g:jedi#goto_definitions_command = "<localleader>d"
+let g:jedi#documentation_command = "<localleader>D"
+let g:jedi#usages_command = "<localleader>u"
+let g:jedi#completions_command = ""
+let g:jedi#rename_command = "<localleader>r"
+
+"----------------------------------------------------------
+" general plugin settings
+"----------------------------------------------------------
+" escape Python documentations, qf and vim-plug buffers with escape key
+autocmd! FileType rst,vim-plug,qf nmap <silent><buffer><Esc> :q<CR>
