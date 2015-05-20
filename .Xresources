@@ -1,3 +1,4 @@
+! reread the file by typing $xrdb -merge ~/.Xresources
 ! Use a nice truetype font and size by default---
 xterm*faceName: Monospace
 xterm*faceSize: 9
@@ -7,6 +8,8 @@ xterm*faceSize: 9
 xterm*loginshell: true
 
 ! Terminal colors---
+xterm*termName: xterm-256color
+
 ! black on white scheme
 xterm*foreground: #2e3436
 xterm*background: #ffffff
@@ -42,4 +45,4 @@ xterm*internalBorder: 0
 xterm*saveLines: 2000
 xterm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
 xterm*cursorBlink: true
-
+xterm*selectToClipboard: true

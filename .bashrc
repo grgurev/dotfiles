@@ -72,6 +72,12 @@ xterm*|rxvt*)
     ;;
 esac
 
+# default shell go straight in tmux
+#if which tmux >/dev/null 2>&1; then
+#    #if not inside a tmux session, and if no session is started, start a new sesion
+#    test -z "$TMUX" && (tmux attach || tmux new-session)
+#fi
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -86,6 +92,9 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# turn off Ctrl-s
+stty stop undef
 
 # some more ls aliases
 #alias ll='ls -l'
@@ -102,6 +111,9 @@ alias ls="ls -CF --color=auto"
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+
+# VIM alias
+alias vim="vim --servername VIM"
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile

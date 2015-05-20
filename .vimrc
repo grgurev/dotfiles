@@ -43,7 +43,7 @@ set noswapfile
 set hidden
 
 " exclude some of the plugins to searh for a trailing whitespace
-let g:better_whitespace_filetypes_blacklist=['unite', 'vimfiler','qf', 'rbrowser']
+let g:better_whitespace_filetypes_blacklist=['unite','vimfiler','qf','rbrowser']
 
 " automatically reload files changed outside of Vim
 set autoread
@@ -104,16 +104,17 @@ set nuw=4           " setting the size of the character for row numbering
 set ruler           " set the current position at the bottom of the screen
 set scrolloff=5     " keep at least 5 lines above/below
 set sidescrolloff=5 " keep at least 5 lines left/right
-set shortmess=atI     " don't show intro
+set shortmess=atI   " don't show intro
 set vb t_vb=        " remove sounds and flashing on erors
-set guioptions-=T   " remove top toolbar
-set guioptions-=m  "remove menu bar
+set guioptions=     " remove all GUI elements
+"set guioptions-=T   " remove top toolbar
+"set guioptions-=m   "remove menu bar
 set guifont=Monospace\ 9  " set default font
 set backspace=indent,eol,start  " allow the backspace key to erase previously entered characters, autoindent, and newline
-set tw=80           " set width of document (used by gd)
+set tw=79           " set width of document (used by gd)
 set nowrap          " don't automatically wrap on load
 set fo-=t           " automatically wrap text when typing
-set colorcolumn=80  " set the colorcolumn to 80 column
+set colorcolumn=79  " set the colorcolumn to 80 column
 highlight ColorColumn ctermbg=7     " change the color of the color column
 set showmode        " always show what mode we're currently editing in
 set tabstop=4       " a tab is four spaces
@@ -204,13 +205,7 @@ let g:unite_redraw_hold_candidates = 50000
 
 " fuzzy match by default
 call unite#filters#matcher_default#use(['converter_relative_word', 'matcher_fuzzy'])
-
-"let g:unite_winheight = 15
-"call unite#filters#matcher_default#use(['matcher_fuzzy'])
-"call unite#custom#source('file_rec/async', 'converters', ['converter_relative_word'])
-"call unite#custom#source('file_rec/async', 'sorters', ['sorter_selecta'])
 call unite#custom#source('file_rec/async,directory_rec/async', 'max_candidates', 19)
-
 
 " selecta sorter by default
 call unite#filters#sorter_default#use(['sorter_selecta'])
@@ -258,7 +253,7 @@ nnoremap <silent><leader>r <Plug>(unite_restart)
 " vimfiler
 "----------------------------------------------------------
 let g:vimfiler_as_default_explorer = 1
-nnoremap <silent><space>t :<C-u>VimFilerExplorer -buffer-name=explorer -split -winwidth=35<CR>
+nnoremap <silent><space>t :<C-u>VimFilerExplorer -winwidth=35<CR>
 autocmd! FileType vimfiler nmap <silent><buffer><Esc> <Plug>(vimfiler_close)
 
 "----------------------------------------------------------
@@ -312,9 +307,6 @@ let g:neocomplete#min_keyword_length = 3
 " close preview window automatically
 let g:neocomplete#enable_auto_close_preview = 1
 
-" <TAB>: completion.
-"inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-
 " For smart TAB completion.
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
     \ <SID>check_back_space() ? "\<TAB>" :
@@ -352,4 +344,5 @@ let g:jedi#rename_command = "<localleader>r"
 " general plugin settings
 "----------------------------------------------------------
 " escape Python documentations, qf and vim-plug buffers with escape key
-autocmd! FileType rst,vim-plug,qf nmap <silent><buffer><Esc> :q<CR>
+autocmd! FileType rst,vim-plug,qf,help nmap <silent><buffer><Esc> :q<CR>
+autocmd! FileType qf,vim-plug set colorcolumn=0
