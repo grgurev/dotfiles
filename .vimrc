@@ -266,7 +266,7 @@ nnoremap <leader>/ :Ag
 "----------------------------------------------------------
 " flake8
 "----------------------------------------------------------
-let g:flake8_quickfix_height=25
+let g:flake8_quickfix_height=15
 autocmd! FileType qf,vim-plug set colorcolumn=0
 autocmd BufWritePost *.py call Flake8()
 
@@ -311,6 +311,9 @@ let g:neocomplete#enable_auto_close_preview = 1
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
     \ <SID>check_back_space() ? "\<TAB>" :
     \ neocomplete#start_manual_complete()
+inoremap <expr><s-TAB> pumvisible() ? "\<C-p>" :
+    \ <SID>check_back_space() ? "\<s-TAB>" :
+    \ neocomplete#start_manual_complete()
 function! s:check_back_space() "{
     let col = col('.') - 1
     return !col || getline('.')[col - 1] =~ '\s'
@@ -335,6 +338,7 @@ let g:jedi#use_tabs_not_buffers = 0
 " default jedi-vim mappings
 let g:jedi#goto_assignments_command = "<localleader>g"
 let g:jedi#goto_definitions_command = "<localleader>d"
+let g:jedi#goto_command = ""
 let g:jedi#documentation_command = "<localleader>D"
 let g:jedi#usages_command = "<localleader>u"
 let g:jedi#completions_command = ""
