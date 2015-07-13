@@ -161,12 +161,13 @@ Plug 'Shougo/neomru.vim'    " mru plugin for Unit
 Plug 'Shougo/vimfiler.vim'  " Powerful file explorer implemented by Vim script
 Plug 'nvie/vim-flake8'      " a static syntax and style checker for Python source code
 Plug 'davidhalter/jedi-vim' " Python autocompletion with VIM
-Plug 'ntpeters/vim-better-whitespace'  " Better whitespace highlighting for Vim 
+Plug 'ntpeters/vim-better-whitespace'  " Better whitespace highlighting for Vim
 Plug 'tpope/vim-fugitive'   " a Git wrapper so awesome, it should be illegal
 "Plug 'jcfaria/Vim-R-plugin' " Plugin to work with R
 Plug 'Shougo/neocomplete.vim'   " next generation completion framework
 Plug 'Shougo/context_filetype.vim'  " context filetype library for Vim script
 Plug 'ivanov/vim-ipython'   " a two-way integration between Vim and Python
+Plug 'lervag/vimtex'       "A modern vim plugin for editing LaTeX files
 
 call plug#end()
 
