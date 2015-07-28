@@ -4,6 +4,8 @@ tomorrow
 ---------------------
 
 Port of the Tomorrow colour scheme https://github.com/chriskempson/tomorrow-theme
+
+This file needs to be copied to pygments/style folder in /usr/lib/python3.4 or pythont2.7 fodler
 """
 
 from pygments.style import Style

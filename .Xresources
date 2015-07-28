@@ -10,8 +10,11 @@ xterm*loginshell: true
 ! Terminal colors---
 xterm*termName: xterm-256color
 
-! black on white scheme
-xterm*foreground: #2e3436
+! Terminal size
+xterm*vt100*geometry: 80x24
+
+! black on white scheme  stari je bio 2e3436
+xterm*foreground: #4d4d4c
 xterm*background: #ffffff
 
 ! tangoesque scheme
