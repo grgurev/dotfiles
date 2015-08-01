@@ -125,3 +125,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# This is required for executable gems to work without typing out the full location, although libraries will work without having to modify your path.
+#PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"

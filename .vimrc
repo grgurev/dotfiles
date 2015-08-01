@@ -92,6 +92,9 @@ nnoremap <leader>v <C-w>v<C-w>l
 " change directory to the file being edited
 nnoremap <leader>w :cd %:p:h<CR>:pwd<CR>
 
+" map key to ident xml files
+noremap X !!xmllint --format --encode UTF-8 -<CR>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Console UI and editing behaviour
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -107,8 +110,6 @@ set sidescrolloff=5 " keep at least 5 lines left/right
 set shortmess=atI   " don't show intro
 set vb t_vb=        " remove sounds and flashing on erors
 set guioptions=     " remove all GUI elements
-"set guioptions-=T   " remove top toolbar
-"set guioptions-=m   "remove menu bar
 set guifont=Monospace\ 9  " set default font
 set backspace=indent,eol,start  " allow the backspace key to erase previously entered characters, autoindent, and newline
 set tw=79           " set width of document (used by gd)
@@ -168,6 +169,7 @@ Plug 'Shougo/neocomplete.vim'   " next generation completion framework
 Plug 'Shougo/context_filetype.vim'  " context filetype library for Vim script
 Plug 'ivanov/vim-ipython'   " a two-way integration between Vim and Python
 Plug 'lervag/vimtex'       "A modern vim plugin for editing LaTeX files
+Plug 'aquach/vim-http-client'   " Forget your curl today! Make HTTP requests from Vim without wrestling the command line!
 
 call plug#end()
 
