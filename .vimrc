@@ -1,4 +1,3 @@
-
 " My Vim file
 "
 " Maintainer:
@@ -6,7 +5,7 @@
 "       marin.grgurev@gmail.com
 "
 " Version:
-"       1.6 - May 2, 2015
+"       1.7 - October 19, 2015
 "
 " Sections:
 "           General settings
@@ -110,7 +109,7 @@ set sidescrolloff=5 " keep at least 5 lines left/right
 set shortmess=atI   " don't show intro
 set vb t_vb=        " remove sounds and flashing on erors
 set guioptions=     " remove all GUI elements
-set guifont=Monospace\ 9  " set default font
+set guifont=Monaco:h11  " set default font
 set backspace=indent,eol,start  " allow the backspace key to erase previously entered characters, autoindent, and newline
 set tw=79           " set width of document (used by gd)
 set nowrap          " don't automatically wrap on load
@@ -167,17 +166,28 @@ Plug 'tpope/vim-fugitive'   " a Git wrapper so awesome, it should be illegal
 "Plug 'jcfaria/Vim-R-plugin' " Plugin to work with R
 Plug 'Shougo/neocomplete.vim'   " next generation completion framework
 Plug 'Shougo/context_filetype.vim'  " context filetype library for Vim script
-Plug 'ivanov/vim-ipython'   " a two-way integration between Vim and Python
-Plug 'lervag/vimtex'       "A modern vim plugin for editing LaTeX files
-Plug 'aquach/vim-http-client'   " Forget your curl today! Make HTTP requests from Vim without wrestling the command line!
+Plug 'vim-pandoc/vim-pandoc'    " pandoc integration and utilities for vim
+Plug 'vim-pandoc/vim-pandoc-syntax' "pandoc markdown syntax, to be installed alongside vim-pandoc
+"Plug 'ivanov/vim-ipython'   " a two-way integration between Vim and Python
+"Plug 'lervag/vimtex'       "A modern vim plugin for editing LaTeX files
+"Plug 'aquach/vim-http-client'   " Forget your curl today! Make HTTP requests from Vim without wrestling the command line!
 
 call plug#end()
 
 "----------------------------------------------------------
 " Easy align interactive
 "----------------------------------------------------------
-vnoremap <silent> <Enter> :EasyAlign<cr>
-let g:easy_align_delimiters = { ';': { 'pattern': ';', 'left_margin': 0, 'right_margin': 1, 'stick_to_left': 1 } }
+"vnoremap <silent> <Enter> :EasyAlign<cr>
+"let g:easy_align_delimiters = { ';': { 'pattern': ';', 'left_margin': 0, 'right_margin': 1, 'stick_to_left': 1 } }
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+let g:easy_align_delimiters = {
+\ ';': { 'pattern': ';' },
+\ }
 
 "----------------------------------------------------------
 " unite
@@ -186,18 +196,18 @@ let g:easy_align_delimiters = { ';': { 'pattern': ';', 'left_margin': 0, 'right_
 let g:unite_source_history_yank_enable = 1
 
 " use ag in unite find source
-let g:unite_source_rec_async_command = 'ag --follow --nocolor --nogroup --hidden ' .
-    \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git/'' --ignore ''.bzr'' ' .
-    \ '--ignore ''.zip'' --ignore ''.tar.gz'' --ignore ''.tar.bz2'' --ignore ''.rar'' ' .
-    \ '--ignore ''**/*.pyc'' -g ""'
-
-" ues ag in unite grep source
+let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--skip-vcs-ignores', '--hidden', '-g', '']
+"let g:unite_source_rec_async_command = 'ag --follow --nocolor --nogroup --hidden ' .
+"    \ '--ignore ''.hg'' --ignore ''.svn'' --ignore ''.git/'' --ignore ''.bzr'' ' .
+"    \ '--ignore ''.zip'' --ignore ''.tar.gz'' --ignore ''.tar.bz2'' --ignore ''.rar'' ' .
+"    \ '--ignore ''**/*.pyc'' -g ""'
 let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts =
-    \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
-    \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' ' .
-    \ '--ignore ''.zip'' --ignore ''.tar.gz'' --ignore ''.tar.bz2'' --ignore ''.rar'' ' .
-    \ '--ignore ''**/*.pyc'' -g ""'
+let g:unite_source_grep_default_opts = '-i --line-numbers --nocolor --nogroup --skip-vcs-ignores --hidden -g ""'
+"let g:unite_source_grep_default_opts =
+"    \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
+"    \ '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' ' .
+"    \ '--ignore ''.zip'' --ignore ''.tar.gz'' --ignore ''.tar.bz2'' --ignore ''.rar'' ' .
+"    \ '--ignore ''**/*.pyc'' -g ""'
 let g:unite_source_grep_recursive_opt = ''
 
 " type 'find ~/ -type f | wc -l' to find the number of files to cache in home dir
@@ -218,7 +228,7 @@ call unite#custom_source('directory_rec/async,file_rec/async',
     \ 'ignore_pattern', join([
     \ '.cache/', '.git/', 'tmp/', '\.jpg$', '\.jpeg$', '\,bmp$', '\.png$', '\.gif$',
     \ '.zip$', '\.tar\.gz$', '\.tar\.bz2$', '\.rar$', '\.tar\.xz$', '\.pyc$', '\.swp',
-    \ '.sol$'
+    \ '.sol$', 'Applications/', 'Library/'
     \ ], '\|'))
 
 " tweaks related to unite ui
@@ -242,8 +252,8 @@ function! s:UniteKeymaps()
 endfunction
 
 " custom unite mappings (normal mode)
-nnoremap <silent><leader>e :<C-u>Unite -default-action=lcd directory_rec/async:/home/marin<CR>
-nnoremap <silent><leader>g :<C-u>Unite file_rec/async:/home/marin/<CR>
+nnoremap <silent><leader>e :<C-u>Unite -default-action=lcd directory_rec/async:/Users/marin<CR>
+nnoremap <silent><leader>g :<C-u>Unite file_rec/async:/Users/marin/<CR>
 nnoremap <silent><leader>f :<C-u>Unite file_rec/async:!<CR>
 nnoremap <silent><leader>d :<C-u>Unite buffer<CR>
 nnoremap <silent><leader>x :<C-u>Unite line<CR>
