@@ -166,8 +166,8 @@ Plug 'tpope/vim-fugitive'   " a Git wrapper so awesome, it should be illegal
 "Plug 'jcfaria/Vim-R-plugin' " Plugin to work with R
 Plug 'Shougo/neocomplete.vim'   " next generation completion framework
 Plug 'Shougo/context_filetype.vim'  " context filetype library for Vim script
-Plug 'vim-pandoc/vim-pandoc'    " pandoc integration and utilities for vim
-Plug 'vim-pandoc/vim-pandoc-syntax' "pandoc markdown syntax, to be installed alongside vim-pandoc
+"Plug 'vim-pandoc/vim-pandoc'    " pandoc integration and utilities for vim
+"Plug 'vim-pandoc/vim-pandoc-syntax' "pandoc markdown syntax, to be installed alongside vim-pandoc
 "Plug 'ivanov/vim-ipython'   " a two-way integration between Vim and Python
 "Plug 'lervag/vimtex'       "A modern vim plugin for editing LaTeX files
 "Plug 'aquach/vim-http-client'   " Forget your curl today! Make HTTP requests from Vim without wrestling the command line!
@@ -260,7 +260,7 @@ nnoremap <silent><leader>x :<C-u>Unite line<CR>
 nnoremap <silent><leader>s :<C-u>Unite file_mru<CR>
 nnoremap <silent><leader>a :<C-u>Unite bookmark<CR>
 nnoremap <silent><leader>y :<C-u>Unite history/yank<CR>
-nnoremap <silent><leader>r <Plug>(unite_restart)
+nnoremap <silent><leader>r <Plug>(unite_redraw)
 
 "----------------------------------------------------------
 " vimfiler
